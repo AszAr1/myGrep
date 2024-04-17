@@ -1,0 +1,2 @@
+My version of grep includes only 5 flags and works only with .txt files so it's really incomplete. 
+But i really learned a lot while writing this mini project, and i think it still is a very userfull tool.
