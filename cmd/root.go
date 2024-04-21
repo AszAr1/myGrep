@@ -28,6 +28,15 @@ func init() {
 }
 
 func grep(cmd *cobra.Command, args []string) {
+	ignoreCase := getFlag(cmd, "ignore-case")
+	invertMatch := getFlag(cmd, "invert-match")
+	lineNumber := getFlag(cmd, "line-number")
+	wordRegexp := getFlag(cmd, "word-regexp")
+	count := getFlag(cmd, "count")
+
+	lineNumberVar := 1
+	countVar := 0
+
 	regex, fileNames := getRegexAndFileNames(args)
 
 	r, err := regexp.Compile(regex)
@@ -42,6 +51,12 @@ func check(err error, errString string) {
 	if err != nil {
 		log.Fatal(errString, err)
 	}
+}
+
+func getFlag(cmd *cobra.Command, name string) bool {
+	flag, err := cmd.Flags().GetBool(name)
+	check(err, fmt.Sprintf("Could not get flag %s\n", name))
+	return flag
 }
 
 func getRegexAndFileNames(args []string) (string, []string) {
