@@ -53,9 +53,9 @@ func grep(cmd *cobra.Command, args []string) {
 
 		for _, l := range text {
 			if r.MatchString(l) && !invertMatch {
-				fmt.Println(paintedLine(r, strings.Split(l, " ")))
+				outputLine(strings.Join(paintedLine(r, strings.Split(l, " ")), " "), lineNumber, &lineNumberVar)
 			} else if !r.MatchString(l) && invertMatch {
-				println(l)
+				outputLine(l, lineNumber, &lineNumberVar)
 			}
 		}
 
@@ -98,6 +98,14 @@ func paintedLine(r *regexp.Regexp, line []string) []string {
 		}
 	}
 	return line
+}
+
+func outputLine(line string, lineCount bool, lineCountVar *int) {
+	if lineCount {
+		fmt.Printf("%d: ", *lineCountVar)
+		*lineCountVar++
+	}
+	fmt.Println(line)
 }
 
 func Execute() {
