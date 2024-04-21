@@ -51,6 +51,11 @@ func grep(cmd *cobra.Command, args []string) {
 	for _, fileName := range fileNames {
 		text := strings.Split(getTextFromFile(fileName), "\n")
 
+		if count {
+			countVar += findCount(r, text, invertMatch)
+			continue
+		}
+
 		for _, l := range text {
 			if r.MatchString(l) && !invertMatch {
 				outputLine(strings.Join(paintedLine(r, strings.Split(l, " ")), " "), lineNumber, &lineNumberVar)
@@ -106,6 +111,17 @@ func outputLine(line string, lineCount bool, lineCountVar *int) {
 		*lineCountVar++
 	}
 	fmt.Println(line)
+}
+
+func findCount(r *regexp.Regexp, lines []string, invertMatch bool) int {
+	count := 0
+	for _, line := range lines {
+		matchFound := r.MatchString(line)
+		if (matchFound && !invertMatch) || (!matchFound && invertMatch) {
+			count++
+		}
+	}
+	return count
 }
 
 func Execute() {
