@@ -52,9 +52,9 @@ func grep(cmd *cobra.Command, args []string) {
 		text := strings.Split(getTextFromFile(fileName), "\n")
 
 		for _, l := range text {
-			if r.MatchString(l) {
+			if r.MatchString(l) && !invertMatch {
 				fmt.Println(paintedLine(r, strings.Split(l, " ")))
-			} else {
+			} else if !r.MatchString(l) && invertMatch {
 				println(l)
 			}
 		}
