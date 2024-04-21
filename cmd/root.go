@@ -3,6 +3,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"github.com/TwiN/go-color"
 	"log"
 	"os"
 	"regexp"
@@ -50,6 +51,14 @@ func grep(cmd *cobra.Command, args []string) {
 	for _, fileName := range fileNames {
 		text := strings.Split(getTextFromFile(fileName), "\n")
 
+		for _, l := range text {
+			if r.MatchString(l) {
+				fmt.Println(paintedLine(r, strings.Split(l, " ")))
+			} else {
+				println(l)
+			}
+		}
+
 	}
 }
 
@@ -79,6 +88,16 @@ func getTextFromFile(fileName string) string {
 	bytes, err := os.ReadFile(fileName)
 	check(err, fmt.Sprintf("Could not read file %s\n", fileName))
 	return string(bytes)
+}
+
+func paintedLine(r *regexp.Regexp, line []string) []string {
+	for j, w := range line {
+		if r.MatchString(w) {
+			match := r.FindString(line[j])
+			line[j] = strings.Replace(line[j], match, color.Ize(color.Red, match), 1)
+		}
+	}
+	return line
 }
 
 func Execute() {
