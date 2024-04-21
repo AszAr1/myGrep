@@ -38,6 +38,12 @@ func grep(cmd *cobra.Command, args []string) {
 	countVar := 0
 
 	regex, fileNames := getRegexAndFileNames(args)
+	if wordRegexp {
+		regex = "\\b" + regex + "\\b"
+	}
+	if ignoreCase {
+		regex = "(?i)" + regex
+	}
 
 	r, err := regexp.Compile(regex)
 	check(err, fmt.Sprintf("Could not compile regex '%s'\n", regex))
