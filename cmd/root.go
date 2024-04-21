@@ -1,8 +1,10 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"regexp"
 
 	"github.com/spf13/cobra"
 )
@@ -25,6 +27,9 @@ func init() {
 
 func grep(cmd *cobra.Command, args []string) {
 	regex, fileNames := getRegexAndFileNames(args)
+
+	r, err := regexp.Compile(regex)
+	check(err, fmt.Sprintf("Could not compile regex '%s'\n", regex))
 }
 
 func check(err error, errString string) {
