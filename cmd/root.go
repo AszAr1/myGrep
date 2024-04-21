@@ -1,10 +1,12 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"os"
 	"regexp"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -30,6 +32,10 @@ func grep(cmd *cobra.Command, args []string) {
 
 	r, err := regexp.Compile(regex)
 	check(err, fmt.Sprintf("Could not compile regex '%s'\n", regex))
+	for _, fileName := range fileNames {
+		text := strings.Split(getTextFromFile(fileName), "\n")
+
+	}
 }
 
 func check(err error, errString string) {
@@ -43,6 +49,15 @@ func getRegexAndFileNames(args []string) (string, []string) {
 		log.Fatal("Have not been given any file names")
 	}
 	return args[0], args[1:]
+}
+
+func getTextFromFile(fileName string) string {
+	if _, err := os.Stat(fileName); errors.Is(err, os.ErrNotExist) {
+		log.Fatal("file doesn't exist:", fileName)
+	}
+	bytes, err := os.ReadFile(fileName)
+	check(err, fmt.Sprintf("Could not read file %s\n", fileName))
+	return string(bytes)
 }
 
 func Execute() {
